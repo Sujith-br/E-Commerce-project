@@ -1,4 +1,4 @@
-package javaDemo.E_com;
+ package javaDemo.E_com;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -120,27 +120,25 @@ public class App
 	    		switch(Integer.parseInt(br.readLine())){
 	    		
 	    		case 1:
-	    			
+	    			User newUser = new User();
 	    			do {
-			    		System.out.println("Name:");
-				    	String name = br.readLine();
+			    		checkUserName(newUser);
 				    	
-				    	System.out.println("email:");
-				    	String email = br.readLine();
+				    	checkEmail(newUser);
 				    	
 				    	System.out.println("Mobile Number:");
-				    	String mobileNumber = br.readLine();
+				    	newUser.setMobileNumber(br.readLine());
 				    	
 				    	System.out.println("Username:");
-				    	String userName = br.readLine();
+				    	newUser.setUserName(br.readLine());
 				    	
 				    	System.out.println("Password:");
-				    	String password = br.readLine();
+				    	newUser.setPassword(br.readLine());
 				    	
 				    	System.out.println("Role:");
-				    	String role1 = br.readLine();
+				    	newUser.setRole(br.readLine());
 				    	
-				    	User newUser = new User(name,email,mobileNumber,userName,password,role1);
+				    	
 		    			
 		    			System.out.println("Enter Address");
 		    	    	
@@ -199,15 +197,11 @@ public class App
 					            	    	switch(Integer.parseInt(br.readLine())) {
 					            	    	
 					        	    	    	case 1:
-					        	    	    		System.out.println("Enter new Name:");
-					        	    	    		updateUser.setName(br.readLine());
-					        	    	    		userBO.update(updateUser);
+					        	    	    		checkUserName(updateUser);
 					        	    	    		break;
 					        	    	    		
 					        	    	    	case 2:
-					        	    	    		System.out.println("Enter new email:");
-					        	    	    		updateUser.setEmail(br.readLine());
-					        	    	    		userBO.update(updateUser);
+					        	    	    		checkEmail(updateUser);
 					        	    	    		break; 
 					        	    	    		
 					        	    	    	case 3:
@@ -382,7 +376,7 @@ public class App
 		System.out.println("Pincode:");
 		address.setPincode(br.readLine());
 		addressBO.updateAddress(address);
-		userBO.update(user);
+		userBO.update(user); 
 	}
 	
 	private static void createProduct(Product product) throws Exception {
@@ -397,5 +391,85 @@ public class App
 		System.out.println("Quantity:");
 		product.setQuantity(Integer.parseInt(br.readLine()));
 		productBO.insert(product);
+	}
+	
+	private static void checkEmail(User user)throws Exception{
+		Boolean checkEmail= false;
+		//Integer a = 0;
+		do {
+			System.out.println("Enter email:");
+			String mail = br.readLine();
+			
+			Boolean lengthCheck = userBO.spaceAndLengthCheck(mail);
+			if(lengthCheck) {
+				System.out.println("Enter valid email address");
+				checkEmail = true; 
+			}
+			else {
+				Boolean emailValidation = userBO.emailValidation(mail);
+				if(emailValidation) {
+					System.out.println("Enter valid email address");
+					checkEmail = true;
+				}
+				else {
+					Boolean emailCheck= userBO.checkEmail(mail);
+					if(emailCheck) {
+						System.out.println("email already exists. Enter valid email");
+						checkEmail = true;
+					}
+					else {
+						user.setEmail(mail);
+						userBO.update(user);
+						checkEmail = false;
+					}
+					
+				}
+				
+			}
+		}while(checkEmail);
+	}
+
+	
+			/*Boolean emailCheck= userBO.checkEmail(mail);
+			if(emailCheck) {
+				System.out.println("emai
+				l already exists. Enter valid email");
+				checkEmail = true;
+				a++;
+				break;
+			}
+			
+			Boolean emailValidation = userBO.emailValidation(mail);
+			if(emailValidation) {
+				System.out.println("Enter valid email address");
+				checkEmail = true;
+				a++;
+				break;
+			}
+			if(a==0) {
+				user.setEmail(mail);
+				userBO.update(user);
+				checkEmail = false;
+			}
+			
+		}while(checkEmail);
+	  }*/
+	
+	private static void checkUserName(User user)throws Exception{
+		Boolean checkUserName = false;
+		do {
+			System.out.println("Enter Username:");
+			String userName = br.readLine();
+			Boolean checkName = userBO.checkUserNAme(userName);
+			if(checkName) {
+				System.out.println("username already exists. Enter new user name");
+				checkName = true;
+			}
+			else {
+				user.setUserName(userName);
+				userBO.update(user);
+				checkName = true;
+			}
+		}while(checkUserName);
 	}
 }
