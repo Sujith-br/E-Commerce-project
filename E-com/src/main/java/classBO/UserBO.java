@@ -97,6 +97,29 @@ public class UserBO {
 		   
 	   }
 	 
+	   public Boolean passwordValidation(String password) {
+		   Boolean pword = true;
+		   String regex = "^(?=.*[0-9])"
+                   + "(?=.*[a-z])(?=.*[A-Z])$";
+		   
+		   if(password.matches(regex)) {
+			   pword = false;
+		   }
+		return pword;
+		   
+	   }
+	   
+	   public Boolean mobileNumberValidation(String number) {
+		   Boolean num = true;
+		   String regex = "(0/91)?[7-9][0-9]{9}";
+		   if(number.matches(regex)) {
+			   num = false;
+		   }
+		   return num;
+	   }
+
+
+
 }
 
 

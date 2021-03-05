@@ -93,9 +93,10 @@ public class App
     	userList = userBO.listOfUsers();
     	Integer count = 0;
     	String role ="";
+    	String userName="";
     	do {
     		System.out.println("Enter User Name:");
-        	String userName = br.readLine();
+        	 userName = br.readLine();
         	System.out.println("Enter Password:");
         	String password = br.readLine();
         	
@@ -122,18 +123,17 @@ public class App
 	    		case 1:
 	    			User newUser = new User();
 	    			do {
-			    		checkUserName(newUser);
+	    				
+	    				System.out.println("Name:");
+				    	newUser.setName(br.readLine());
 				    	
 				    	checkEmail(newUser);
 				    	
-				    	System.out.println("Mobile Number:");
-				    	newUser.setMobileNumber(br.readLine());
+				    	mobileNumberValidate(newUser);
 				    	
-				    	System.out.println("Username:");
-				    	newUser.setUserName(br.readLine());
+				    	checkUserName(newUser);
 				    	
-				    	System.out.println("Password:");
-				    	newUser.setPassword(br.readLine());
+				    	checkPassword(newUser);
 				    	
 				    	System.out.println("Role:");
 				    	newUser.setRole(br.readLine());
@@ -177,12 +177,10 @@ public class App
 	    			Integer flag = 0;
 	    			do {
 						do {
-		    				//Integer flag =0;
+		    				
 			    			System.out.println("Enter the username:");
 			    			String userNameCheck = br.readLine();
-			    			//List<User> updatedUserList = new ArrayList<User>();
-			    			//updatedUserList = userBO.listOfUsers();
-			    				
+			    			
 			            		if(userBO.checkUser(userNameCheck)==null) {
 			            			System.out.println("Enter Valid Username");
 			            			flag=0;
@@ -197,7 +195,9 @@ public class App
 					            	    	switch(Integer.parseInt(br.readLine())) {
 					            	    	
 					        	    	    	case 1:
-					        	    	    		checkUserName(updateUser);
+					        	    	    		System.out.println("Enter new name :");
+					        	    	    		updateUser.setName(br.readLine());
+					        	    	    		userBO.update(updateUser);
 					        	    	    		break;
 					        	    	    		
 					        	    	    	case 2:
@@ -205,22 +205,16 @@ public class App
 					        	    	    		break; 
 					        	    	    		
 					        	    	    	case 3:
-					        	    	    		System.out.println("Enter new mobile Number :");
-					        	    	    		updateUser.setMobileNumber(br.readLine());
-					        	    	    		userBO.update(updateUser);
+					        	    	    		mobileNumberValidate(updateUser);
 					        	    	    		break;
 					        	    	    		
 					        	    	    	case 4:
 					        	    	    		
-					        	    	    		System.out.println("Enter new User Name:");
-					        	    	    		updateUser.setUserName(br.readLine());
-					        	    	    		userBO.update(updateUser);
+					        	    	    		checkUserName(updateUser);
 					        	    	    		break;
 					        	    	    		
 					        	    	    	case 5:
-					        	    	    		System.out.println("Enter new Password:");
-					        	    	    		updateUser.setPassword(br.readLine());
-					        	    	    		userBO.update(updateUser);
+					        	    	    		checkPassword(updateUser);
 					        	    	    		break;
 					            	    	}
 					            	    	
@@ -230,8 +224,7 @@ public class App
 			            	 			
 			    			System.out.println("Do you want to update another user(Yes/No");
 		    			}while( br.readLine().equalsIgnoreCase("Yes"));
-						//System.out.println("Do you want to update another user(Yes/No");
-					    //answer1 = br.readLine();
+						
 	    			}while(flag==0);
 	    			break;
 	    		case 3:
@@ -241,9 +234,7 @@ public class App
 			    			do {
 				    			System.out.println("Enter the Username of the user to add address");
 				    			String userNameCheck1= br.readLine();
-				    			
-				    			//updatedUserList1= userBO.listOfUsers();
-				    				
+	
 				            		if(userBO.checkUser(userNameCheck1)==null) {
 				            			System.out.println("Enter Valid Username");
 				            			flag1=0;
@@ -358,8 +349,68 @@ public class App
     	
     	
     	else if(role.equalsIgnoreCase("Customer")) {
-    		userBO.customerDisplay();;
-    	}
+    		userBO.customerDisplay();
+    		List<Product> cartList = new ArrayList<Product>();
+    		
+    		switch(Integer.parseInt(br.readLine())) {
+    		
+    		case 1:
+    			List<Product> productList = new ArrayList<Product>();
+    			productList = productBO.listOfProducts();
+    			Integer count1 = 0;
+    			do {
+	    			for(int i = 0;i<productList.size();i++) {
+	    				System.out.println(productList.get(i).getName());
+	    			}	    			
+	    			do {
+    					System.out.println("Enter the name of the product to purchase");
+    					String searchProduct = br.readLine();			   			
+			    		for(int i = 0;i<productList.size();i++) {
+			    			if(searchProduct.equalsIgnoreCase(productList.get(i).getName())) {
+			    			 System.out.println(productList.get(i).getBrand()+"  "+productList.get(i).getColour()+"  "+productList.get(i).getPrice());
+			    			 Product buyProduct = new Product();
+		   					 buyProduct.setName(productList.get(i).getName());
+		   					 buyProduct.setBrand(productList.get(i).getBrand());
+		   					 buyProduct.setColour(productList.get(i).getColour()); 
+		   					 System.out.println("Enter the quantity of the product");
+		   					 Integer quantity = Integer.parseInt(br.readLine());
+		   					 buyProduct.setQuantity(quantity);
+		   					 buyProduct.setPrice(productList.get(i).getPrice()*quantity);
+		   					 cartList.add(buyProduct);    
+		   					 count1++;
+			    		    }		 
+						}
+			    		if(count1==0) {
+			    			System.out.println("Please enter correct product");
+			    		}
+	    			}while(count1<=0);
+		    			System.out.println("Do you want to add more products to cart(Yes/No)");
+    			}while(br.readLine().equalsIgnoreCase("Yes"));
+    			System.out.println("Your cart List\n"+cartList);
+    			Double totalPrice = 0.00;
+    			for(int i = 0; i < cartList.size() ; i++) {
+    				totalPrice += cartList.get(i).getPrice();
+    			}
+    			System.out.println("Total: "+totalPrice);
+    			System.out.println("Select an address to proceed");
+    			 List<Address> addressListOfUser = new ArrayList<Address>();
+    			for(int i = 0; i< userList.size();i++) {
+    				if(userName.equals(userList.get(i).getUserName())) {
+    					 addressListOfUser = userList.get(i).getAddress();
+    				}
+    			}
+    			System.out.println(addressListOfUser);
+    			
+    			
+    			
+    			
+    			
+    			
+    			
+    			
+    			
+    		} //switch closing
+    	}//customer closing
 
 }
 	private static void updateAddress(User user, Address address) throws Exception {
@@ -393,9 +444,26 @@ public class App
 		productBO.insert(product);
 	}
 	
+	private static void checkUserName(User user)throws Exception{
+		Boolean checkUserName = false;
+		do {
+			System.out.println("Enter Username:");
+			String userName = br.readLine();
+			Boolean checkName = userBO.checkUserNAme(userName);
+			if(checkName) {
+				System.out.println("username already exists. Enter new user name");
+				checkName = true;
+			}
+			else {
+				user.setUserName(userName);
+				userBO.update(user);
+				checkName = true;
+			}
+		}while(checkUserName);
+	}
+	
 	private static void checkEmail(User user)throws Exception{
 		Boolean checkEmail= false;
-		//Integer a = 0;
 		do {
 			System.out.println("Enter email:");
 			String mail = br.readLine();
@@ -428,48 +496,62 @@ public class App
 			}
 		}while(checkEmail);
 	}
-
 	
-			/*Boolean emailCheck= userBO.checkEmail(mail);
-			if(emailCheck) {
-				System.out.println("emai
-				l already exists. Enter valid email");
-				checkEmail = true;
-				a++;
-				break;
-			}
-			
-			Boolean emailValidation = userBO.emailValidation(mail);
-			if(emailValidation) {
-				System.out.println("Enter valid email address");
-				checkEmail = true;
-				a++;
-				break;
-			}
-			if(a==0) {
-				user.setEmail(mail);
-				userBO.update(user);
-				checkEmail = false;
-			}
-			
-		}while(checkEmail);
-	  }*/
-	
-	private static void checkUserName(User user)throws Exception{
-		Boolean checkUserName = false;
+	private static void checkPassword(User user)throws Exception{
+		Boolean checkPassword= false;
 		do {
-			System.out.println("Enter Username:");
-			String userName = br.readLine();
-			Boolean checkName = userBO.checkUserNAme(userName);
-			if(checkName) {
-				System.out.println("username already exists. Enter new user name");
-				checkName = true;
+			System.out.println("Enter password:");
+			String password = br.readLine();
+			
+			Boolean lengthCheck = userBO.spaceAndLengthCheck(password);
+			if(lengthCheck) {
+				System.out.println("Invalid Password. Password must contain atleast one lowercase, one upper case and one number");
+				checkPassword = true; 
 			}
 			else {
-				user.setUserName(userName);
-				userBO.update(user);
-				checkName = true;
+				Boolean passwordValidate = userBO.passwordValidation(password);
+				if(passwordValidate) {
+					System.out.println("Invalid Password. Password must contain atleast one lowercase, one upper case and one number");
+					checkPassword = true;
+				}
+				else {
+					user.setPassword(password);
+					userBO.update(user);
+					checkPassword = false;
+				}
+					
 			}
-		}while(checkUserName);
+				
+		}while(checkPassword);
 	}
+	
+	private static void mobileNumberValidate(User user) throws Exception {
+		Boolean checkNumber = false;
+		do {
+			System.out.println("Enter mobile number:");
+			String mobileNumber = br.readLine();
+			
+			Boolean lengthCheck = userBO.spaceAndLengthCheck(mobileNumber);
+			if(lengthCheck) {
+				System.out.println("Invalid mobile number");
+				checkNumber = true; 
+			}
+			else {
+				Boolean mobileNumberValidate = userBO.mobileNumberValidation(mobileNumber);
+				if(mobileNumberValidate) {
+					System.out.println("Mobile number must begin with 7-9 and there must be 10 digits");
+					checkNumber = true;
+				}
+				else {
+					user.setMobileNumber(mobileNumber);
+					userBO.update(user);
+					checkNumber = false;
+				}
+					
+			}
+				
+		}while(checkNumber);
+	}
+	
+
 }

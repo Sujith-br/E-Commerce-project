@@ -1,5 +1,6 @@
 package classBO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import classDAO.ProductDAO;
@@ -25,4 +26,11 @@ public class ProductBO {
 		return checkProduct;
 		   
 	   }
+    
+    public List<Product> listOfProducts() {
+		
+        List<Product> productList = new ArrayList<Product>();
+        productList = productDao.list();
+        return productList;
+	}
 }

@@ -74,4 +74,10 @@ public class Product {
 		this.brand = brand;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return brand+" "+name+" "+colour+" "+price;
+	}
+	
 }
